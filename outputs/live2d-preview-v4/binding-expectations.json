@@ -1,0 +1,20 @@
+{
+  "working_thinking": {
+    "ParamEyeLOpen": {"required":false,"deferredByUser":true},
+    "ParamEyeROpen": {"allowedDrawables":["ArtMesh20","ArtMesh48","ArtMesh52","ArtMesh46"]},
+    "ParamDragonMouseX": {"allowedDrawables":["ArtMesh9","ArtMesh10"],"requiredDrawables":["ArtMesh9","ArtMesh10"],"maxDxPx":6,"maxDyPx":3},
+    "ParamDragonKeyIndex": {"allowedDrawables":["ArtMesh7"],"requiredDrawables":["ArtMesh7"],"maxDistancePx":2},
+    "ParamDragonKeyMiddle": {"required":false,"maxDistancePx":2,"mappingNote":"Not bound in the first release; verified index-finger typing is used."},
+    "ParamDragonTailBase": {"maxDistancePx":7,"allowedDrawables":["ArtMesh38"],"requiredDrawables":["ArtMesh38"]},
+    "ParamBreath": {"allowedDrawables":["ArtMesh37"],"requiredDrawables":["ArtMesh37"],"maxDistancePx":2},
+    "ParamDragonAhoge": {"required":false,"allowedDrawables":["ArtMesh33"],"requiredDrawables":["ArtMesh33"],"maxDistancePx":4}
+  },
+  "idle_high_energy": {
+    "ParamEyeLOpen": {},
+    "ParamEyeROpen": {},
+    "ParamDragonTailBase": {"maxDistancePx":7},
+    "ParamAngleX": {"required":false},
+    "ParamAngleZ": {"required":false},
+    "ParamBreath": {"required":false}
+  }
+}

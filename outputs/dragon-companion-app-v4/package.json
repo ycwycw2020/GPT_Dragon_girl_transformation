@@ -1,0 +1,12 @@
+{
+  "name": "gpt-niang-companion",
+  "productName": "GPT娘",
+  "version": "0.4.5",
+  "private": true,
+  "description": "Local transparent shell for the exported dragon Cubism model",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "powershell -NoProfile -File start.ps1",
+    "check": "node --test app.test.mjs window-sizing.test.mjs"
+  }
+}

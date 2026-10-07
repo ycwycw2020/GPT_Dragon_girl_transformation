@@ -1,0 +1,8 @@
+{
+  "version": "Cubism SDK for Web 5-r.5",
+  "source": "https://cubism.live2d.com/sdk-web/bin/CubismSdkForWeb-5-r.5.zip",
+  "sha256": "67064a7fb1812cf502f5c4a03bfe12cc638c75a621bb4acf06bb28763df06ba0",
+  "frameworkModules": 59,
+  "processing": "Framework compiled with official TypeScript 5.9.3 full Program (no type errors); relative imports receive .js. Core unmodified.",
+  "generatedAt": "2026-10-06"
+}

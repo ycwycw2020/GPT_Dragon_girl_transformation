@@ -1,0 +1,12 @@
+work/
+node_modules/
+**/runtime/electron-*/
+*.zip
+*.log
+.env
+.env.*
+**/hooks.ready.json
+**/hook-installation-receipt.json
+**/validation/
+Thumbs.db
+.DS_Store

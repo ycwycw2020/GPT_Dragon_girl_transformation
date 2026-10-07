@@ -1,0 +1,10 @@
+{
+  "version": "44.5.1",
+  "release": "https://github.com/electron/electron/releases/tag/v44.5.1",
+  "archive": "https://github.com/electron/electron/releases/download/v44.5.1/electron-v44.5.1-win32-x64.zip",
+  "sha256": "9b382492dcfee91f8f9e92c91f7972550a1b95d2299cac72279dab33a600d7db",
+  "officialChecksum": "https://github.com/electron/electron/releases/download/v44.5.1/SHASUMS256.txt",
+  "executableSignatureStatus": "NotSigned",
+  "signer": null,
+  "runtimePath": "runtime/electron-44.5.1"
+}
