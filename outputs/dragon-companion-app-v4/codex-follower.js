@@ -35,7 +35,7 @@ function snapshot() {
 }
 if(WScript.Arguments.length && WScript.Arguments(0)==='--self-test') {
   if(!desktopPath('C:\\Program Files\\WindowsApps\\OpenAI.Codex_1.0_x64__test\\app\\ChatGPT.exe'))throw new Error('Desktop match failed');
-  if(desktopPath('D:\\Demo\\AppData\\Local\\OpenAI\\Codex\\bin\\v1\\codex.exe'))throw new Error('CLI must not trigger');
+  if(desktopPath('C:\\Users\\test\\AppData\\Local\\OpenAI\\Codex\\bin\\v1\\codex.exe'))throw new Error('CLI must not trigger');
   if(!decide({key:'A',petRunning:false},'').launch)throw new Error('Launch edge failed');
   if(decide({key:'A',petRunning:false},'A').launch)throw new Error('Manual exit was overridden');
   if(decide({key:'A',petRunning:true},'').launch)throw new Error('Duplicate launch');

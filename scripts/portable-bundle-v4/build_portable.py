@@ -1,4 +1,4 @@
-"""Build a self-contained Windows x64 GPT娘 portable archive from frozen outputs.
+"""Build a self-contained Windows x64 GPT_Dragon_girl_transformation portable archive from frozen outputs.
 
 Only release files are admitted. Source artwork, personal state, logs and
 machine-specific generated Codex hook configuration never enter the archive.
@@ -13,10 +13,11 @@ from pathlib import Path, PurePosixPath
 import re
 import zipfile
 
-WORKSPACE = Path(__file__).resolve().parents[1]
+WORKSPACE = Path(__file__).resolve().parents[2]
 OUTPUTS = WORKSPACE / "outputs"
-BUILD = WORKSPACE / "work/release-build"
-ARCHIVE_NAME = "GPT娘-Live2D桌宠-v4.zip"
+BUILD = Path(__file__).resolve().parent
+VERSION = "1.0.0"
+ARCHIVE_NAME = f"GPT_Dragon_girl_transformation-v{VERSION}.zip"
 APP = "dragon-companion-app-v4"
 PREVIEW = "live2d-preview-v4"
 BRIDGE = "dragon-codex-bridge-v4"
@@ -24,56 +25,43 @@ MODEL = "live2d-model-v4"
 
 APP_FILES = [
     "main.cjs", "preload.cjs", "package.json", "start.cmd", "start.ps1", "question-notice.cjs", "codex-follower.js", "随Codex启动说明.txt",
-    "state-bridge.mjs", "quota-service.mjs", "window-sizing.cjs", "window-interaction.cjs", "chat-link.cjs", "set-state.mjs",
-    "life/index.mjs", "life/index.d.mts", "life/index.d.ts", "life/API.txt",
+    "state-bridge.mjs", "quota-service.mjs", "window-sizing.cjs", "window-interaction.cjs", "chat-link.cjs", "conversation-navigation.cjs", "task-follow.cjs", "set-state.mjs", "codex-rest-control.mjs", "rest-wakeup.mjs",
+    "life/index.mjs", "life/index.d.mts", "life/index.d.ts", "life/API.txt", "virtual-desktops.cjs", "virtual-desktops.ps1",
 ]
 PREVIEW_FILES = [
-    "app.mjs", "bindings.mjs", "controller.mjs", "index.html", "style.css",
-    "model-catalog.mjs", "model-qa.mjs", "server.mjs", "binding-expectations.json",
-    "pet-drag.mjs", "mini.html", "mini.css", "mini.mjs", "notice.html", "notice.css", "notice.mjs",
+    "app.mjs", "ambient-motion.mjs", "touch-interactions.mjs", "source-textures.mjs", "leg-repair.mjs", "leg-motion.mjs", "brow-repair.mjs", "idle-rig.mjs", "eye-blink.mjs", "assets/left-eye/43_eye_L_closed.png", "assets/left-eye/45_eye_L_upperlash.png", "assets/left-eye/47_eye_L_skin_base.png", "assets/left-eye/49_eye_L_stationary_eye.png", "assets/left-eye/blink-geometry.json", "assets/reference-working.png", "assets/legs-corrected.png", "assets/notebook.png", "assets/earring-mask.png", "bindings.mjs", "controller.mjs", "index.html", "style.css",
+    "model-catalog.mjs", "model-qa.mjs", "server.mjs", "binding-expectations.json", "affection-reactions.mjs", "reaction-visuals.mjs", "extra-touch.mjs",
+    "pet-drag.mjs", "view-presentation.mjs", "task-bubble-state.mjs", "mini.html", "mini.css", "mini.mjs", "notice.html", "notice.css", "notice.mjs",
 ]
-BRIDGE_FILES = ["hook.mjs", "task-details.mjs", "question-notice.mjs", "quota.mjs", "prepare-hooks.mjs", "install-hooks.mjs"]
+BRIDGE_FILES = ["hook.mjs", "task-details.mjs", "assistant-activity.mjs", "question-notice.mjs", "quota.mjs", "prepare-hooks.mjs", "install-hooks.mjs", "global-threads.mjs", "task-transcript.mjs", "merge-task-sources.mjs"]
 RUNTIME_FILES = ["controller.mjs", "controller.d.mts", "controller.d.ts"]
 
-README = """GPT娘 · Live2D 桌宠 v4.5（Windows x64 便携版）
+README = f"""GPT_Dragon_girl_transformation · v{VERSION} · Windows x64
 
-启动
-1. 将整个 ZIP 解压到可写文件夹，例如 D:\\tool\\GPT娘。
-2. 双击最外层 start.cmd。请勿直接在压缩文件中启动，也不要只复制 EXE。
-3. 包内已包含 Electron 与 Cubism Web 运行组件，正常启动不需要另装 Node.js、Python、Cubism Editor 或 npm 包。
+安装：将整个 ZIP 解压到可写目录，双击最外层 start.cmd。
+运行包自带 Electron 与 Cubism Web 组件，无须安装 Node.js、Python 或 Cubism Editor。
+程序不占用底部任务栏，系统托盘小图标提供操作菜单与退出入口。
 
-缩放与操作
-• 首次启动默认 180 × 200 逻辑像素，宽高均为旧版 540 × 600 的 1/3。
-• 鼠标位于 GPT娘 上时，Ctrl + 滚轮缩放；右键菜单“缩放”可选比例、放大、缩小或恢复默认。
-• 窗口获得焦点时，Ctrl + 加号/减号缩放，Ctrl + 0 恢复默认。
-• 比例范围为旧版的 25%–150%，显示区域不足时会自动适配当前屏幕。比例会在本包的 work 文件夹保存。
-• 按住角色、桌面或任务卡片文字区域自由拖动，位置自动保存。右键或托盘菜单支持置顶、鼠标穿透、暂停、问候、陪玩与休息。
-• Ctrl + Alt + Shift + D 恢复显示和交互；托盘菜单“退出”会结束程序。
+使用：按住角色或桌面拖动；Ctrl + 滚轮缩放；右键或托盘切换状态、监听任务、查看好感与休息。
+首次默认 180×200 逻辑像素；在屏幕右侧自动镜像，气泡文字保持正向。
+Ctrl + Alt + Shift + D 可恢复显示与交互。
 
-任务卡片
-默认展示项目目录、真实操作、额度、好感度、等级和经验，每750毫秒刷新。
-可下拉固定会话，悬停目录查看完整路径；自动模式跟随最近活跃会话。
-点击“新建聊天”使用官方 codex://threads/new 入口，在当前跟随目录打开Codex新聊天，不自动发送消息。
-右上角减号收起卡片；桌宠右键菜单“显示当前任务卡片”可恢复。卡片不随人物缩放，保持文字可读。
-保留 v0.4.3 的简洁任务卡片，取消回复草稿、复制转交和追加要求输入区。
-捕获到支持的提问事件时，在桌宠上方显示粉白提示框：“我有新的提问(｡･∀･)ﾉﾞ”。使用幼圆后备字体、爱心与轻微弹出动效，可关闭，最长保留5分钟。请回到Codex原界面回答。
-Hooks保存目录、工具名、操作分类与散列标识；提问提醒不保存题目、选项或回答。具体功能和限制见根目录 README.md。公开发布时不要上传 work 目录。
+v1.0 全局任务监听：只读当前 Codex 本地索引、任务历史与受限日志元数据，发现不同 C/D 盘目录下最近最多200个未归档主聊天。菜单使用 Codex 的聊天名称，并按独立聊天编号区分。
+“切换监听任务”可选择自动跟随或固定某个聊天，选择会保存。气泡只显示简短工作状态；点击跳回对应聊天。
+点击云朵先破碎一次再跳转；从点击起约6.5秒后，该聊天仍在工作才重新显示，已结束的任务保持收起。
+全局任务发现不依赖项目日期或项目所在目录；额度与部分提问/输出通知仍需可用的 Codex CLI / Hooks。
+Hooks 必须由使用者审核信任，安装步骤见 docs/installation.md。没有 Hooks 时也可发现本机聊天；本包不会自动信任任何 Hook。
+提问提示：“我有新的提问(｡･∀･)ﾉﾞ”；点击在 Codex 中处理。问题正文和回答不会复制到桌宠。
 
-本版内容
-已包含首个工作形态的真实 Cubism moc3 模型，带呼吸、呆毛、尾巴、鼠标与手掌联动、食指敲键盘。
-左眼暂按你的要求保持原状；自动动作保持双眼睁开。精力满满和疲惫形态尚未包含在本便携包中。
-动作由本地程序驱动，模型源工程 cmo3 和分层 PSD 不在此运行包中。
+角色保留工作、三档精力与休息形态、双眼眨动、小幅呼吸、尾巴、腿部与触碰互动。
+90种分档反应随好感等级解锁；Lv.100 显示 MAX。配音已移除。
+休息无倒计时，新开始的 Codex 任务可唤醒。当前休息无法停止 Codex 内项目，需在 Codex 手动停止。
+工作态为真实 Cubism 模型配合程序增强；其他形态和部分互动为本程序的局部图层形变，并非独立 moc3。
 
-Codex 状态
-安装了可用且已登录的 Codex CLI 时，程序会尝试只读查询额度；未配置PATH时也会查找本机Codex安装目录。没有 CLI 时仍可显示并操作桌宠，额度显示未知。
-任务状态接入需要另行配置 Codex Hooks；本包没有自动安装、信任或携带原电脑的 hooks.ready.json。
-使用Node 24或更高版本运行 outputs/dragon-codex-bridge-v4/prepare-hooks.mjs，再运行同目录install-hooks.mjs --apply，可为本解压目录准备并安装定义；在Codex CLI /hooks中审核信任。移动目录后须重新配置。不要把首次安装等同于已验证真实回调。
-独立 Live2D 桌宠与 Codex 内置宠物是两个运行入口；此 ZIP 不会改动 Codex 内置宠物目录。
-
-数据与结构
-outputs/ 内是必需的相对依赖目录，请一起保留。首次启动会创建 work/，用于本地设置、养成数据和运行日志。
-首次解压不含其他电脑的个人状态。不同解压目录各自保存数据。
-manifest.json 记录每个发布文件的 SHA-256。SDK、Electron 和 Chromium 许可证保留在对应 vendor/runtime 目录内。
+文件：完整使用介绍见 README.md；安装见 docs/installation.md；新版本说明见 docs/release-v1.0.md。
+首次启动创建 work/ 保存本机偏好、养成和运行记录；公开上传时不包含个人 work/。
+完整工程包另含最新分层 PSD、Cubism 工程、原画及开发脚本；便携包用于直接运行。
+manifest.json 为发布文件 SHA-256 清单。第三方许可证位于 vendor/runtime 相应目录。
 """
 
 
@@ -113,6 +101,24 @@ def collect_sources() -> dict[str, Path]:
             if source.is_file():
                 add(source.relative_to(OUTPUTS).as_posix())
     add("hd-v3/working_thinking.png")
+    add(f"{PREVIEW}/assets/source-layers/manifest.json")
+    original_layers = json.loads((OUTPUTS / PREVIEW / "assets/source-layers/manifest.json").read_text(encoding="utf-8"))
+    for layer in original_layers["layers"]:
+        name = layer["file"]
+        if PurePosixPath(name).name != name or ":" in name:
+            raise RuntimeError("Invalid original layer asset path")
+        add(f"{PREVIEW}/assets/source-layers/{name}")
+    for directory in ["idle", "brow-repair", "reactions"]:
+        asset_root = OUTPUTS / PREVIEW / "assets" / directory
+        if not asset_root.is_dir():
+            raise RuntimeError(f"Runtime artwork missing: {directory}")
+        for source in sorted(asset_root.rglob("*")):
+            if source.is_file():
+                if source.name == "README.md":
+                    continue  # Authoring provenance is kept in the project.
+                if source.suffix.lower() not in {".png", ".json"}:
+                    raise RuntimeError(f"Unexpected runtime artwork file: {source}")
+                add(source.relative_to(OUTPUTS).as_posix())
 
     # Admit only the actual selected model and its declared runtime resources.
     model_name = "dragon-working.model3.json"
@@ -162,6 +168,12 @@ def generated_files() -> dict[str, bytes]:
     runtime_provenance.pop("installedAt", None)
     return {"start.cmd": launcher.encode("ascii"), "使用说明.txt": README.replace("\n", "\r\n").encode("utf-8-sig"),
             "README.md": (WORKSPACE / "README.md").read_bytes(),
+            "docs/installation.md": (WORKSPACE / "docs/installation.md").read_bytes(),
+            "docs/release-v1.0.md": (WORKSPACE / "docs/release-v1.0.md").read_bytes(),
+            "docs/affection-reactions.md": (WORKSPACE / "docs/affection-reactions.md").read_bytes(),
+            "docs/touch-guide.md": (WORKSPACE / "docs/touch-guide.md").read_bytes(),
+            "docs/codex-rest-control.md": (WORKSPACE / "docs/codex-rest-control.md").read_bytes(),
+            "docs/window-presentation.md": (WORKSPACE / "docs/window-presentation.md").read_bytes(),
             "docs/images/gpt-niang.png": (WORKSPACE / "docs/images/gpt-niang.png").read_bytes(),
             "docs/images/question-notice.png": (WORKSPACE / "docs/images/question-notice.png").read_bytes(),
             f"outputs/{APP}/runtime-provenance.json": json_bytes(runtime_provenance)}
@@ -184,18 +196,49 @@ def validate_local_imports(sources: dict[str, Path]) -> None:
                 raise RuntimeError(f"Missing imported module: {name} -> {reference}")
 
 
+def validate_release_boundary(sources: dict[str, Path], generated: dict[str, bytes]) -> None:
+    """Reject authoring media and secret/private identity data at the release edge."""
+    excluded_parts = {"work", "__pycache__", "node_modules", "validation", ".git", ".codex", ".agents"}
+    excluded_suffixes = {".psd", ".cmo3", ".log", ".wav", ".mp3", ".m4a", ".aac", ".mp4", ".flac", ".ogg", ".opus"}
+    private_text = re.compile(
+        r"sk-(?:api|proj)-[A-Za-z0-9_-]{20,}|gptgirl-bili-[A-Za-z0-9_-]+|"
+        r"[\"']voice_?id[\"']\s*:\s*[\"']|work[\\/]voice-v[0-9]+[\\/]|"
+        r"reference[\\/]chatgpt-reference\.wav", re.IGNORECASE)
+    text_suffixes = {".txt", ".json", ".md", ".js", ".cjs", ".mjs", ".html", ".css", ".ps1", ".cmd", ".ts", ".mts"}
+    entries = {**sources, **generated}
+    for name, content in entries.items():
+        path = PurePosixPath(name)
+        if (any(part in excluded_parts or part == "voice" or part.startswith(("voice-v", "voice-auditions")) for part in path.parts)
+                or path.name in {"touch-voice.mjs", "voice-settings.cjs", "voice-guide.md"}
+                or path.suffix.lower() in excluded_suffixes or path.name == "hooks.ready.json"):
+            raise RuntimeError(f"Private/authoring file entered release: {name}")
+        if path.suffix.lower() not in text_suffixes:
+            continue
+        data = content.read_bytes() if isinstance(content, Path) else content
+        if private_text.search(data.decode("utf-8-sig")):
+            # Never report a matched secret or private service ID.
+            raise RuntimeError(f"Secret/private authoring data entered release text: {name}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--plan", action="store_true")
     args = parser.parse_args()
     sources = collect_sources()
+    package = json.loads((OUTPUTS / APP / "package.json").read_text(encoding="utf-8"))
+    if package.get("version") != VERSION:
+        raise RuntimeError("Package version differs from the release archive version")
     generated = generated_files()
     validate_local_imports(sources)
+    validate_release_boundary(sources, generated)
     total_bytes = sum(source.stat().st_size for source in sources.values()) + sum(map(len, generated.values()))
     summary = {"archive": ARCHIVE_NAME, "sourceFiles": len(sources), "generatedFiles": len(generated),
                "uncompressedBytes": total_bytes, "portableNormalLaunchNeedsNode": False,
                "defaultWindow": {"width": 180, "height": 200, "scale": 1 / 3},
-               "excluded": ["PSD", "cmo3", "work state and logs", "generated hooks.ready.json", "unexported variants"]}
+               "audioIncluded": False, "voiceFeaturesIncluded": False,
+               "excluded": ["PSD", "cmo3", "work state and logs", "generated hooks.ready.json", "unexported variants",
+                            "all dubbing audio, audition records, voice runtime modules and settings",
+                            "reference media, private service ids, prompts and API keys"]}
     if args.plan:
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         return
@@ -216,7 +259,7 @@ def main() -> None:
         for name, content in sorted(generated.items()):
             archive.writestr(name, content)
             entries.append({"path": name, "bytes": len(content), "sha256": digest(content)})
-        manifest = {"name": "GPT娘", "version": "0.4.5", "platform": "win32-x64",
+        manifest = {"name": "GPT_Dragon_girl_transformation", "version": json.loads((OUTPUTS / APP / "package.json").read_text(encoding="utf-8"))["version"], "platform": "win32-x64",
                     "createdAt": datetime.now(timezone.utc).isoformat(),
                     "normalEntryPoint": "start.cmd", "files": entries, "packaging": summary}
         archive.writestr("manifest.json", json_bytes(manifest))
@@ -248,7 +291,7 @@ def main() -> None:
               "allEntryHashesVerified": True, "crcVerified": True,
               "previousArchive": backup.name if backup else None,
               "runtimeLaunchValidation": "pending extracted-package smoke check"}
-    (OUTPUTS / "GPT娘-便携包校验.json").write_bytes(json_bytes(report))
+    (OUTPUTS / "GPT_Dragon_girl_transformation-便携包校验.json").write_bytes(json_bytes(report))
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 

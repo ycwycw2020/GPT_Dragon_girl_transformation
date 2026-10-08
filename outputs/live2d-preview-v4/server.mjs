@@ -7,7 +7,7 @@ import { MODEL_CATALOG } from './model-catalog.mjs';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const MIME = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8',
   '.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8',
-  '.json':'application/json; charset=utf-8','.png':'image/png','.jpg':'image/jpeg',
+  '.json':'application/json; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.mp3':'audio/mpeg',
   '.moc3':'application/octet-stream','.frag':'text/plain','.vert':'text/plain',
   '.md':'text/plain; charset=utf-8','.txt':'text/plain; charset=utf-8'};
 
@@ -15,19 +15,23 @@ export async function startServer({port=4174, modelDirectory=path.resolve(HERE,'
   modelFileName,stateProvider}={}) {
   async function listModels() {
     return Promise.all(MODEL_CATALOG.map(async model=>{
+      if(model.kind==='layered-runtime'){
+        let available=false;try{available=(await stat(path.join(HERE,model.assetManifest))).isFile();}catch{}
+        return {id:model.id,label:model.label,kind:model.kind,available,modelManifestAvailable:false,assetManifest:'/'+model.assetManifest,genuineRenderVerified:false};
+      }
       const candidates=model.id==='working_thinking'&&modelFileName?[modelFileName]:model.files;
       let available=false,file=candidates[0];
       for(const candidate of candidates) {
         try {if((await stat(path.join(modelDirectory,candidate))).isFile()) {available=true;file=candidate;break;}} catch {}
       }
-      return {id:model.id,label:model.label,modelManifestAvailable:available,
+      return {id:model.id,label:model.label,kind:model.kind,available,modelManifestAvailable:available,
         modelUrl:`/model/${file.split('/').map(encodeURIComponent).join('/')}`,file,
         genuineRenderVerified:false};
     }));
   }
   const server=http.createServer(async(req,res)=>{
     const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
-      'Content-Security-Policy':"default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; img-src 'self' blob:; style-src 'self'; connect-src 'self'; frame-ancestors 'none'"};
+      'Content-Security-Policy':"default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; img-src 'self' blob:; style-src 'self'; connect-src 'self'; media-src 'self'; frame-ancestors 'none'"};
     const reply=(status,text,type='text/plain; charset=utf-8')=>{
       res.writeHead(status,{...headers,'Content-Type':type}); res.end(req.method==='HEAD'?'':text);
     };

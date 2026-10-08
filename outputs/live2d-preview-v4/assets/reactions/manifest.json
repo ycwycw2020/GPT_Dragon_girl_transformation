@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "canvas": [
+    2426,
+    2592
+  ],
+  "runtime": "reaction-visuals.mjs",
+  "modelFormat": "Local runtime patches; not an independent Cubism moc3 export.",
+  "artwork": [
+    {
+      "pose": "angry",
+      "file": "angry.png",
+      "size": [
+        1213,
+        1296
+      ],
+      "sha256": "11d7bf1ab25568dd353679e9d507b25de63087924caea94e71f2ceaff099b30d",
+      "origin": "OpenAI built-in image generation; approved working reference composition",
+      "fileUnmodified": true,
+      "runtimeRegions": [
+        "face",
+        "mouse-hand"
+      ],
+      "handMotionRegionAvailable": true,
+      "sourceCanvas": [
+        2426,
+        2592
+      ],
+      "sourceRegistration": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "pose": "shy",
+      "file": "shy.png",
+      "size": [
+        1213,
+        1296
+      ],
+      "sha256": "f7f366811fc8f4a5709857c655232a9de86c5c1441195b957b2229cfe9a7c2f1",
+      "origin": "OpenAI built-in image generation; approved working reference composition",
+      "fileUnmodified": true,
+      "runtimeRegions": [
+        "face"
+      ],
+      "handMotionRegionAvailable": true,
+      "sourceCanvas": [
+        2426,
+        2592
+      ],
+      "sourceRegistration": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "pose": "affectionate",
+      "file": "affectionate.png",
+      "size": [
+        1213,
+        1296
+      ],
+      "sha256": "44ce3c47bb93b70bc14c1892dc260aab8a1b6b661e0d25b4e3e3ac98981f7349",
+      "origin": "OpenAI built-in image generation; approved working reference composition",
+      "fileUnmodified": true,
+      "runtimeRegions": [
+        "face"
+      ],
+      "handMotionRegionAvailable": true,
+      "sourceCanvas": [
+        2426,
+        2592
+      ],
+      "sourceRegistration": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "pose": "sleep",
+      "file": "sleep.png",
+      "size": [
+        1213,
+        1296
+      ],
+      "sha256": "dfa9c20924e157a52736f87eac2242451102e942576217f877c8dbea7cfddf3b",
+      "origin": "OpenAI built-in image generation; approved working reference composition",
+      "fileUnmodified": true,
+      "runtimeRegions": [
+        "face"
+      ],
+      "handMotionRegionAvailable": false,
+      "sourceCanvas": [
+        2426,
+        2592
+      ],
+      "sourceRegistration": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    }
+  ],
+  "supportMasks": [
+    {
+      "state": "idle_high_energy",
+      "file": "idle_high_energy-support.png",
+      "size": [
+        313,
+        505
+      ],
+      "sha256": "acfdbd026db32eb1d0568b2e38f8ce088015126ca023e0aaefeac1a2d9026fd7",
+      "origin": "outputs/live2d-idle-art-v4/idle_high_energy/layers/07_supporting_arm_hand.png",
+      "fileUnmodified": true,
+      "bounds": [
+        1394,
+        888,
+        1707,
+        1393
+      ],
+      "purpose": "Use alpha only to protect the exact supporting hand during temporary expression patches."
+    },
+    {
+      "state": "idle_mid_energy",
+      "file": "idle_mid_energy-support.png",
+      "size": [
+        313,
+        505
+      ],
+      "sha256": "52efb614f5825582baf9e17cf4c8eb09c251c3607b4b36dc5e6da398afb35072",
+      "origin": "outputs/live2d-idle-art-v4/idle_mid_energy/layers/07_supporting_arm_hand.png",
+      "fileUnmodified": true,
+      "bounds": [
+        1394,
+        888,
+        1707,
+        1393
+      ],
+      "purpose": "Use alpha only to protect the exact supporting hand during temporary expression patches."
+    },
+    {
+      "state": "idle_low_energy",
+      "file": "idle_low_energy-support.png",
+      "size": [
+        313,
+        505
+      ],
+      "sha256": "2b4a27dc73d1129a41ba60680cc240b24171bfad939f264e1efb5da93c5fa38d",
+      "origin": "outputs/live2d-idle-art-v4/idle_low_energy/layers/07_supporting_arm_hand.png",
+      "fileUnmodified": true,
+      "bounds": [
+        1394,
+        888,
+        1707,
+        1393
+      ],
+      "purpose": "Use alpha only to protect the exact supporting hand during temporary expression patches."
+    }
+  ],
+  "preservation": "The generated full scene is never substituted. Only registered facial features and bounded hand regions are sampled; the original silhouette, ornament, body, desk and chair remain authoritative.",
+  "motion": "Shared head transform; pinned-sleeve inverse hand warp; separate emotion vector accents. Tail and leg motion are driven by the main rigs.",
+  "validation": [
+    "WebGL transparent compositing and GL-error checks passed.",
+    "Zero changed pixels outside facial/hand regions in standalone GPU samples.",
+    "Idle supporting-hand core remains unchanged.",
+    "Hand surface Jacobian stays positive at all four channel extremes; sleeve and desk contacts are pinned."
+  ]
+}

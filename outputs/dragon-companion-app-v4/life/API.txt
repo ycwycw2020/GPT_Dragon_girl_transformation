@@ -1,4 +1,4 @@
-龙娘本地养成模块 v1（纯 ESM）
+GPT_Dragon_girl_transformation本地养成模块 v2（纯 ESM）
 
 入口 index.mjs；类型 index.d.ts；测试 life.test.mjs。
 模块无文件读写、网络请求、定时器、自动启动或模型控制。它只接收普通数据并返回新的JSON可序列化状态。
@@ -6,14 +6,16 @@ Electron主进程负责选择本应用自己的状态存储位置；不要读取
 
 接口
 createLifeState({now?,timeZone?})：新状态。
-normalizeLifeState(value,options)：丢弃未知字段、修正范围、过期模式回退null、坏版本回退新状态。不会修改原输入。
+normalizeLifeState(value,options)：丢弃未知字段、修正范围、迁移v1存档；未知版本回退新状态。不会修改原输入。
 parseLifeState(json,options) / serializeLifeState(state,options)：坏JSON安全回退；不要直接信任文件中的字段。
 applyInteraction(state,'click'|'pet',options)：返回{state,result}。
 claimGreeting(state,options)：返回{state,result}；result.greeting为本时段首次问候，重复或睡眠时为null。
 getGreeting(options)：仅查看当前时段问候，不记录已问候。
-setTemporaryMode(state,'gaming_mode'|'sleep_mode'|null,{now?,timeZone?,durationMs?})：设置/替换/退出临时模式。
-getEffectiveMode(state,options)：当前有效临时模式或null。
-getProgression(state,options)：level、totalXp、xpToNextLevel、progress等展示值。
+setTemporaryMode(state,'sleep_mode'|null,{now?,timeZone?,restBaseline?})：进入/退出持续休息；durationMs兼容参数被忽略。restBaseline接收当前tasks，只保存id/turn哈希。
+getEffectiveMode(state,options)：sleep_mode或null；游戏陪伴模式已移除。
+getProgression(state,options)：level、affectionLevel、tier、reactionLevel、levelXp、levelXpCost、totalXp、progressionXp、xpToNextLevel、progress、isMax等展示值。
+xpForLevel(level)：到达某等级的累计成长XP；LEVEL_COSTS为Lv1至Lv99升级所需成本数组。
+tierFromLevel(level)：Lv1-3为low、Lv4-6为mid、Lv7-100为high。
 
 options.now是Unix毫秒；省略用Date.now()。timeZone省略使用本机时区，非法时区回退UTC。
 宿主应对所有调用使用同一timeZone选项，避免跨调用切换时区造成自然日边界变化。
@@ -21,11 +23,16 @@ options.now是Unix毫秒；省略用Date.now()。timeZone省略使用本机时�
 睡眠会暂停自动问候和互动奖励，轻触仍可返回sleepy_reaction语义反馈；不会自动退出睡眠。
 
 养成规则
-点击/抚摸每次奖励2经验、1好感。奖励间隔10秒；视觉反馈最多每350毫秒一次。
-每天最多30互动经验；达到每日上限后好感也不再累积，避免连点无限刷。好感范围0–100。
-等级阈值为100×(level-1)^2：1级0、2级100、3级400、4级900。
+点击/抚摸每次奖励2经验。奖励间隔10秒；视觉反馈最多每350毫秒一次。
+每天最多30互动经验；达到每日上限后不再累积。旧affection字段仍保存，作为兼容资料，不再用于展示或反应解锁。
+好感1至100级。Lv1→2至Lv10→11成本依次为6、8、10、12、14、16、18、20、22、24XP；之后每级固定24XP。
+累计门槛：Lv4为24XP、Lv7为66XP、Lv10为126XP、Lv100为2286XP。
+Lv100显示MAX，progress=1、nextLevelXp=null、xpToNextLevel=0、levelXpCost=0，不再奖励经验，防止条溢出。
+反应目录使用getProgression(state).reactionLevel（等级+本级进度），例如4.5表示Lv4进度50%。
+读取v1存档保留原totalXp和旧affection。旧等级/好感保底通过migrationBonusXp记录一次性成长信用，progressionXp=totalXp+migrationBonusXp；不会反复发迁移奖励。
 跨本地自然日重置每日预算；系统时钟回退不会重置预算或绕过奖励间隔。
-游戏默认30分钟、睡眠默认60分钟，最短1秒、最长4小时；模块不启动计时器，读取状态时判断是否过期。
+休息没有时间限制，状态保存kind、startedAt和restBaseline，不写expiresAt。用户主动退出，或宿主通过rest-wakeup.mjs检测到休息后开始的新任务/新轮次时，调用setTemporaryMode(state,null)恢复；同一轮工具活动不会误唤醒。
+仍在生效的v1旧睡眠迁移为持续休息，已过期旧睡眠不复活；旧游戏模式直接清除。
 
 接入示例（主进程持有唯一state，按序处理事件，避免多窗口覆盖彼此的经验）
   import { parseLifeState, applyInteraction, claimGreeting, serializeLifeState } from './life/index.mjs';
@@ -42,9 +49,9 @@ options.now是Unix毫秒；省略用Date.now()。timeZone省略使用本机时�
   // greeting.result.greeting?.text可显示气泡；不可宣称模型已有对应动画。
 
 事件边界
-petting_reaction、sleepy_reaction、greeting_*、gaming_mode/sleep_mode均是语义状态，不是保证存在的Cubism参数或motion文件。
+petting_reaction、sleepy_reaction、greeting_*、sleep_mode均是语义状态，不是保证存在的Cubism参数或motion文件。
 渲染方必须先检查真实模型能力；没有对应绑定时使用文字气泡或普通UI反馈。
-工作任务优先级由宿主状态机决定；本模块不会用临时游戏/睡眠模式覆盖真实Codex任务状态。
+新任务唤醒与工作优先级由宿主状态机决定；本模块不会启动或停止Codex任务。
 本模块不操作剩余额度，也不推测额度数值。
 
 运行测试

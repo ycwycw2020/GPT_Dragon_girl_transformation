@@ -41,6 +41,19 @@ test('multiple sessions, delayed stop, interrupt, expiry',async()=>{
   await act('UserPromptSubmit','A','A2',2000);assert.equal((await aggregate(dataDir,2000+ACTIVITY_TTL)).isWorking,false);
   const state=JSON.parse(await readFile(stateFile));assert.equal(state.source,'codex-hooks');assert.equal(state.remainingPercent,null);
 });
+test('bubble completion requires a confirmed latest root ending and no running children',async()=>{
+  const dataDir=await fixture(),stateFile=path.join(dataDir,'state.json');
+  const act=(event,now,agent,turn='turn-A')=>applyEvent(payload(event,'session-A',turn,agent),{dataDir,stateFile,now});
+  const task=async now=>(await aggregate(dataDir,now)).tasks[0];
+  await act('UserPromptSubmit',1000);await act('SubagentStart',1100,'child-A');
+  await act('Stop',1200);assert.equal((await task(1300)).terminalEvent,null);
+  await act('SubagentStop',1400,'child-A');assert.equal((await task(1500)).terminalEvent,'Stop');
+  await act('UserPromptSubmit',1600,undefined,'turn-B');assert.equal((await task(1700)).terminalEvent,null);
+  await act('SubagentStart',1800,'child-B','turn-B');await act('SubagentStop',1900,'child-B','turn-B');
+  assert.equal((await task(2000+ACTIVITY_TTL)).terminalEvent,null);
+  await act('Interrupt',2100+ACTIVITY_TTL,undefined,'turn-B');assert.equal((await task(2200+ACTIVITY_TTL)).terminalEvent,'Interrupt');
+  await act('SessionEnd',2300+ACTIVITY_TTL,undefined,'turn-B');assert.equal((await task(2400+ACTIVITY_TTL)).terminalEvent,'SessionEnd');
+});
 test('quota unknown, stale, out of range and false zero handling',()=>{
   const good={remainingPercent:0,updatedAt:100,expiresAt:1000};
   assert.equal(readQuotaValue(good,500),0);assert.equal(readQuotaValue(good,1000),null);
@@ -130,4 +143,29 @@ test('importing aggregate and quota does not load SQLite or emit its experimenta
   const result=await worker(`await import(process.argv[1]); await import(process.argv[2]);`,[moduleUrl,
     pathToFileURL(path.resolve('outputs/dragon-codex-bridge-v4/quota.mjs')).href],{suppressExperimentalWarning:false});
   assert.equal(result.stdout,'');assert.equal(result.stderr,'');
+});
+
+test('wake metadata keeps root prompt identity across tools, child changes, and late old-turn events',async()=>{
+  const dataDir=await fixture(),stateFile=path.join(dataDir,'state.json');
+  const act=(event,turn,now,agent)=>applyEvent(payload(event,'wake-session',turn,agent),{dataDir,stateFile,now});
+  await act('UserPromptSubmit','root-1',1000);
+  const first=(await aggregate(dataDir,1100)).tasks[0];
+  assert.match(first.turn,/^[a-f0-9]{64}$/);assert.equal(first.turnStartedAt,1000);assert.equal(first.turnActive,true);
+  await act('PreToolUse','root-1',1200);await act('SubagentStart','child-turn',1300,'child-A');
+  const tools=(await aggregate(dataDir,1400)).tasks[0];
+  assert.equal(tools.turn,first.turn);assert.equal(tools.turnStartedAt,1000);
+  await act('UserPromptSubmit','root-2',1500);await act('Stop','root-1',1600);
+  const next=(await aggregate(dataDir,1700)).tasks[0];
+  assert.notEqual(next.turn,first.turn);assert.equal(next.turnStartedAt,1500);assert.equal(next.turnActive,true);
+  await act('Stop','root-2',1800);
+  const childOnly=(await aggregate(dataDir,1900)).tasks[0];
+  assert.equal(childOnly.active,true);assert.equal(childOnly.turn,next.turn);assert.equal(childOnly.turnActive,false);
+  assert(!JSON.stringify(next).includes('root-2'));assert(!JSON.stringify(next).includes('DO NOT STORE'));
+});
+
+test('a tool-only legacy record does not fabricate a new prompt start time',async()=>{
+  const dataDir=await fixture(),stateFile=path.join(dataDir,'state.json');
+  await applyEvent(payload('PreToolUse'),{dataDir,stateFile,now:2000});
+  const task=(await aggregate(dataDir,2100)).tasks[0];
+  assert.equal(task.active,true);assert.equal(task.turnStartedAt,null);
 });

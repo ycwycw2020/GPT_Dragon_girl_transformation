@@ -2,11 +2,16 @@ work/
 node_modules/
 **/runtime/electron-*/
 *.zip
+*.psd
+*.cmo3
 *.log
 .env
 .env.*
 **/hooks.ready.json
 **/hook-installation-receipt.json
 **/validation/
+**/__pycache__/
+*.wav
+*.mp3
 Thumbs.db
 .DS_Store

@@ -4,3 +4,10 @@ body.pet{background:transparent;overflow:hidden}body.pet main{display:block;padd
 html.pet-root{background:transparent}
 #petSpeech{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:88vw;padding:10px 15px;background:#fcf9fff0;border:1px solid #d9c5ef;border-radius:18px;color:#73558c;font-size:13px;line-height:1.5;box-shadow:0 5px 22px #8661a827;pointer-events:none;opacity:0;transition:opacity .2s;z-index:20}#petSpeech.shown{opacity:1}
 body.pet::before{display:none}body.pet canvas{cursor:grab;touch-action:none;user-select:none}body.pet canvas:active{cursor:grabbing}
+#pageTurn{position:fixed;pointer-events:none!important;min-height:0;z-index:3}#pageTurn[hidden]{display:none}
+#canvas{position:relative;z-index:2}#earringBacking{position:fixed;pointer-events:none!important;min-height:0;z-index:1}#earringBacking[hidden]{display:none}
+#reactionOverlay{position:fixed;pointer-events:none!important;min-height:0;z-index:4}
+body.mirrored #canvas,body.mirrored #pageTurn,body.mirrored #earringBacking,body.mirrored #reactionOverlay{transform:scaleX(-1);transform-origin:center}
+#growthCard{position:fixed;inset:20% 5% auto;padding:12px;background:#fff7fcef;border:2px solid #f7c8df;border-radius:18px;z-index:30;display:flex;flex-direction:column;gap:8px;font:12px/1.5 "YouYuan","Microsoft YaHei",sans-serif;color:#a06191;box-shadow:0 4px 15px #8c527d33}
+#growthCard progress{width:100%;height:12px;accent-color:#ee98c4}#growthCard small{font-size:10px;letter-spacing:0}#growthCard button{padding:4px}#petSpeech{font-family:"YouYuan","Microsoft YaHei",sans-serif;border-color:#f4c3dc;color:#a26990;background:#fff6fbee}
+@media(max-width:260px){#petSpeech{bottom:5px;max-width:94vw;width:max-content;padding:6px 9px;font-size:11px;line-height:1.4;max-height:61px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}

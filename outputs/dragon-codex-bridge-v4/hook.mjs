@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { DEFAULT_STATE_FILE, normalizeState } from '../dragon-companion-app-v4/state-bridge.mjs';
 import { taskDetails, readTaskDetails } from './task-details.mjs';
 import {nextNotice,readNotice} from './question-notice.mjs';
+import {assistantActivityFromHook,readAssistantActivity,transcriptPathFromHook,readAssistantTranscript} from './assistant-activity.mjs';
 
 const HERE=path.dirname(fileURLToPath(import.meta.url));
 export const DATA=path.resolve(HERE,'../../work/codex-bridge-v4');
@@ -53,7 +54,8 @@ export function sanitizeEvent(payload,now=Date.now()) {
   if(!Number.isFinite(now))return null;
   return {version:2,session:hash(session),agent:hash(agent===undefined?'root':'agent:'+agent),
     turn:turn?hash(turn):null,active:ACTIVE_EVENTS.has(event),
-    updatedAt:now,expiresAt:now+ACTIVITY_TTL,event,display:taskDetails(payload)};
+    updatedAt:now,expiresAt:now+ACTIVITY_TTL,event,display:taskDetails(payload),
+    assistantActivity:assistantActivityFromHook(payload,now),transcriptPath:transcriptPathFromHook(payload)};
 }
 export function readQuotaValue(value,now=Date.now()) {
   if(!value||!Number.isFinite(value.remainingPercent)||value.remainingPercent<0||value.remainingPercent>100
@@ -61,7 +63,7 @@ export function readQuotaValue(value,now=Date.now()) {
     ||value.updatedAt>now+60000||value.expiresAt<=now||value.expiresAt<=value.updatedAt)return null;
   return value.remainingPercent;
 }
-export async function aggregate(dataDir=DATA,now=Date.now()) {
+export async function aggregate(dataDir=DATA,now=Date.now(),{assistantReader=readAssistantTranscript}={}) {
   const records=[];
   const entries=await readdir(path.join(dataDir,'activity')).catch(error=>{if(error.code==='ENOENT')return [];throw error;});
   for(const name of entries) {
@@ -89,10 +91,29 @@ export async function aggregate(dataDir=DATA,now=Date.now()) {
   for(const value of [...active].sort((a,b)=>a.updatedAt-b.updatedAt))sessions.set(value.session,value);
   const tasks=await Promise.all([...sessions.values()].map(async value=>{
     const running=active.some(a=>a.session===value.session),display=readTaskDetails(value.display);
+    // A child starting or finishing must not appear to be a new user turn.
+    // Prefer the newest confirmed root turn start over late events for old turns.
+    const roots=records.filter(r=>r.session===value.session&&r.agent===hash('root')&&r.turn)
+      .sort((a,b)=>(b.turnStartedAt??0)-(a.turnStartedAt??0)||b.updatedAt-a.updatedAt);
+    const root=roots[0],turn=/^[a-f0-9]{64}$/.test(root?.turn??'')?root.turn:null;
+    const turnStartedAt=Number.isSafeInteger(root?.turnStartedAt)&&root.turnStartedAt>=0?root.turnStartedAt:null;
+    const turnActive=!!root&&active.some(a=>a.session===root.session&&a.agent===root.agent&&a.turn===root.turn);
     const stale=value.active&&!running;
+    // Only a confirmed terminal root turn (or session end) proves completion.
+    // A child stopping while an unconfirmed parent has expired does not.
+    const endedAt=endedSessions.get(value.session)??0;
+    const terminal=root&&['Stop','Interrupt'].includes(root.event)?root:null;
+    const terminalEvent=!running&&!stale?(endedAt>=Math.max(root?.updatedAt??0,value.updatedAt)?'SessionEnd':
+      terminal&&terminal.expiresAt>now?terminal.event:null):null;
+    let assistantActivity=readAssistantActivity(root?.assistantActivity,now);
+    if(root?.transcriptPath||root?.display?.threadId){
+      const observed=await assistantReader(root.transcriptPath,{since:root.turnStartedAt??root.updatedAt,now,threadId:readTaskDetails(root.display).threadId}).catch(()=>null);
+      const safe=readAssistantActivity(observed,now);
+      if(safe&&(!assistantActivity||safe.updatedAt>assistantActivity.updatedAt))assistantActivity=safe;
+    }
     let questionNotice=null;
     try {questionNotice=readNotice(JSON.parse(await readFile(path.join(dataDir,'question-notices',value.session+'.json'),'utf8')).notice,now);}catch{}
-    return {id:value.session,questionNotice,...display,active:running,updatedAt:value.updatedAt,expiresAt:value.expiresAt,
+    return {id:value.session,turn,turnStartedAt,turnActive,terminalEvent,questionNotice,assistantActivity,...display,active:running,updatedAt:value.updatedAt,expiresAt:value.expiresAt,
       label:stale?'连接超时 · 等待新状态':display.label,stale};
   }));
   tasks.sort((a,b)=>Number(b.active)-Number(a.active)||b.updatedAt-a.updatedAt);
@@ -109,7 +130,14 @@ export async function applyEvent(payload,{dataDir=DATA,stateFile=DEFAULT_STATE_F
   return withActivityLock(dataDir,async()=>{
     let previous=null;
     try {previous=JSON.parse(await readFile(file,'utf8'));}catch{}
+    // Keep the root prompt boundary across Pre/PostToolUse. A tool event alone
+    // cannot prove when a legacy or previously unseen turn actually started.
+    event.turnStartedAt=Number.isSafeInteger(previous?.turnStartedAt)?previous.turnStartedAt:
+      event.event==='UserPromptSubmit'?event.updatedAt:null;
     if(!event.display.cwd&&previous?.display?.cwd)event.display.cwd=readTaskDetails(previous.display).cwd;
+    if(!event.display.threadId&&previous?.display?.threadId)event.display.threadId=readTaskDetails(previous.display).threadId;
+    if(!event.transcriptPath&&event.agent===hash('root'))event.transcriptPath=transcriptPathFromHook({transcript_path:previous?.transcriptPath});
+    if(!event.assistantActivity)event.assistantActivity=readAssistantActivity(previous?.assistantActivity,event.updatedAt);
     // A delayed invocation must not overwrite a newer record for this exact turn.
     // At equal millisecond timestamps, a terminal record wins conservatively.
     const obsolete=previous?.updatedAt>event.updatedAt

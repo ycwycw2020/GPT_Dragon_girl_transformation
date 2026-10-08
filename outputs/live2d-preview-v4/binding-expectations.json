@@ -1,6 +1,6 @@
 {
   "working_thinking": {
-    "ParamEyeLOpen": {"required":false,"deferredByUser":true},
+    "ParamEyeLOpen": {"required":false,"runtimeBinding":"eye-blink.mjs: independent left eyelid; original Core parameter held open"},
     "ParamEyeROpen": {"allowedDrawables":["ArtMesh20","ArtMesh48","ArtMesh52","ArtMesh46"]},
     "ParamDragonMouseX": {"allowedDrawables":["ArtMesh9","ArtMesh10"],"requiredDrawables":["ArtMesh9","ArtMesh10"],"maxDxPx":6,"maxDyPx":3},
     "ParamDragonKeyIndex": {"allowedDrawables":["ArtMesh7"],"requiredDrawables":["ArtMesh7"],"maxDistancePx":2},

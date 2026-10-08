@@ -19,12 +19,20 @@ test('async notification survives tool return, sync reply clears and new input c
   const sync=nextNotice(null,{...payload,tool_name:'request_user_input'},1000);
   assert.equal(nextNotice(sync,{...payload,hook_event_name:'PostToolUse'},1100),null);
 });
-test('bridge exposes generic notices, without UUID, question text or reply payload',async()=>{
+test('bridge exposes generic notices without question text or reply payload; invalid legacy session IDs have no thread address',async()=>{
   const root=path.resolve('work/notice-tests');await mkdir(root,{recursive:true});const dataDir=await mkdtemp(path.join(root,'case-')),stateFile=path.join(dataDir,'state.json');
   await applyEvent(payload,{dataDir,stateFile,now:1000});
-  const task=(await aggregate(dataDir,1100)).tasks[0];assert(task.questionNotice);assert.equal(task.threadId,undefined);assert.equal(task.requests,undefined);
+  const task=(await aggregate(dataDir,1100)).tasks[0];assert(task.questionNotice);assert.equal(task.threadId,null);assert.equal(task.requests,undefined);
   const stored=await readFile(path.join(dataDir,'question-notices',createHash('sha256').update(payload.session_id).digest('hex')+'.json'),'utf8');assert(!stored.includes('PRIVATE'));assert(!stored.includes('notice-session'));
   await applyEvent({...payload,hook_event_name:'UserPromptSubmit'},{dataDir,stateFile,now:1200});assert.equal((await aggregate(dataDir,1300)).tasks[0].questionNotice,null);
+});
+test('bridge carries a valid conversation UUID beside hashed notice metadata, without storing question content',async()=>{
+  const root=path.resolve('work/notice-tests');await mkdir(root,{recursive:true});const dataDir=await mkdtemp(path.join(root,'jump-')),stateFile=path.join(dataDir,'state.json');
+  const thread='01999999-9999-7431-8fff-000000000001';
+  await applyEvent({...payload,session_id:thread},{dataDir,stateFile,now:1000});
+  const task=(await aggregate(dataDir,1100)).tasks[0];assert.equal(task.threadId,thread);assert.equal(task.id.length,64);
+  const selected=noticeUI.chooseNotice([task],'',new Map(),1100);assert.equal(selected.threadId,thread);assert.equal(selected.sessionId,task.id);
+  const stored=await readFile(path.join(dataDir,'question-notices',task.id+'.json'),'utf8');assert(!stored.includes('PRIVATE'));assert(!stored.includes(thread));
 });
 test('notice respects pinned session, dismissal and screen bounds',()=>{
   const n=nextNotice(null,payload,1000),tasks=[{id:'a',questionNotice:n}];

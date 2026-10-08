@@ -1,0 +1,189 @@
+{
+  "schema": 1,
+  "runtime": "weighted-art-runtime-v050",
+  "state": "idle_high_energy",
+  "canvas": [
+    2426,
+    2592
+  ],
+  "modelFormat": "programmatic-layer-rig; not a Cubism moc3 export",
+  "source": {
+    "file": "original.png",
+    "sha256": "d7011918674f4b3090a3e924b4d968971beb0b6f68a821cd758cb5833fd6cc1f",
+    "unchanged": true
+  },
+  "weights": {
+    "file": "weights.png",
+    "channels": {
+      "r": "head",
+      "g": "tail"
+    },
+    "derivedFrom": "original semantic layer masks and approved joint-pinned binding weights"
+  },
+  "tailHit": {
+    "file": "tail-hit.png",
+    "bounds": [
+      0,
+      798,
+      409,
+      1456
+    ]
+  },
+  "sourceMotionRecipe": {
+    "coordinate_space": "HD pixels, origin top left; binding weight PNG is 16-bit gray 0..65535; use shared sampled vertex weights",
+    "head": {
+      "layers": [
+        "03_head_join_buffer",
+        "04_head_hair_face",
+        "05_eye_R_original",
+        "06_eye_L_original"
+      ],
+      "weight_file": "binding-weights/head.png",
+      "x_amplitude_px": 1.6,
+      "y_amplitude_px": 0.4,
+      "suggested_period_seconds": 4.6,
+      "constraint": "Semantic joins, cheek-palm contact and long hair ends are pinned. All listed pieces must share the identical field."
+    },
+    "tail": {
+      "layers": [
+        "01_tail_root_buffer",
+        "02_tail"
+      ],
+      "weight_file": "binding-weights/tail.png",
+      "x_amplitude_px": 6.5,
+      "y_amplitude_px": 0,
+      "suggested_period_seconds": 2.8,
+      "constraint": "Root and semantic joins are weight 0. Preserve current state-specific tail silhouette. Never translate the entire tail."
+    },
+    "static": [
+      "00_static_scene",
+      "07_supporting_arm_hand"
+    ],
+    "fx": {
+      "layer": "08_state_fx",
+      "action": "optional opacity pulse; keep position fixed"
+    },
+    "blink": {
+      "implemented": false,
+      "reason": "Requires dedicated high-quality eyelid/iris/eyelash art refinement. No skin-fade surrogate delivered."
+    },
+    "status": "binding recipe only; no Cubism cmo3/moc3 is claimed"
+  },
+  "runtimeMotion": {
+    "headX": 1.6,
+    "headY": 3.2,
+    "headPeriod": 4.6,
+    "tailX": 14,
+    "tailY": 0,
+    "tailPeriod": 2.8
+  },
+  "blink": {
+    "ready": true,
+    "geometry": "eyes/blink-geometry.json",
+    "layers": [
+      {
+        "id": "46_eye_R_skin_base",
+        "file": "eyes/46_eye_R_skin_base.png",
+        "bounds": [
+          1061,
+          730,
+          1307,
+          934
+        ],
+        "visible": false
+      },
+      {
+        "id": "47_eye_L_skin_base",
+        "file": "eyes/47_eye_L_skin_base.png",
+        "bounds": [
+          1372,
+          629,
+          1570,
+          834
+        ],
+        "visible": false
+      },
+      {
+        "id": "48_eye_R_stationary_eye",
+        "file": "eyes/48_eye_R_stationary_eye.png",
+        "bounds": [
+          1061,
+          730,
+          1307,
+          934
+        ],
+        "visible": false
+      },
+      {
+        "id": "49_eye_L_stationary_eye",
+        "file": "eyes/49_eye_L_stationary_eye.png",
+        "bounds": [
+          1372,
+          629,
+          1570,
+          834
+        ],
+        "visible": false
+      },
+      {
+        "id": "44_eye_R_upperlash",
+        "file": "eyes/44_eye_R_upperlash.png",
+        "bounds": [
+          1072,
+          756,
+          1269,
+          886
+        ],
+        "visible": false
+      },
+      {
+        "id": "45_eye_L_upperlash",
+        "file": "eyes/45_eye_L_upperlash.png",
+        "bounds": [
+          1403,
+          643,
+          1551,
+          755
+        ],
+        "visible": false
+      },
+      {
+        "id": "42_eye_R_closed",
+        "file": "eyes/42_eye_R_closed.png",
+        "bounds": [
+          1061,
+          730,
+          1307,
+          934
+        ],
+        "visible": false
+      },
+      {
+        "id": "43_eye_L_closed",
+        "file": "eyes/43_eye_L_closed.png",
+        "bounds": [
+          1372,
+          629,
+          1570,
+          834
+        ],
+        "visible": false
+      }
+    ],
+    "method": "stationary iris, geometric aperture, independent moving upperlash, refined closed endpoint"
+  },
+  "files": [
+    "original.png",
+    "weights.png",
+    "tail-hit.png",
+    "eyes/blink-geometry.json",
+    "eyes/46_eye_R_skin_base.png",
+    "eyes/47_eye_L_skin_base.png",
+    "eyes/48_eye_R_stationary_eye.png",
+    "eyes/49_eye_L_stationary_eye.png",
+    "eyes/44_eye_R_upperlash.png",
+    "eyes/45_eye_L_upperlash.png",
+    "eyes/42_eye_R_closed.png",
+    "eyes/43_eye_L_closed.png"
+  ]
+}

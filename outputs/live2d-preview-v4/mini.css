@@ -1,2 +1,39 @@
-:root{font-family:'Segoe UI','Microsoft YaHei',sans-serif;color:#4b3a63;background:transparent;font-synthesis:none}*{box-sizing:border-box}body{margin:0;padding:4px;user-select:none;overflow:hidden}#card{height:134px;padding:10px 12px;background:linear-gradient(125deg,#fffcfffa,#f0e7fff5);border:1px solid #decdf4;border-radius:17px;box-shadow:0 2px 5px #3b195520;cursor:grab;touch-action:none}#card:active{cursor:grabbing}header,.project,footer{display:flex;align-items:center;gap:7px}header{justify-content:space-between;margin-bottom:6px}.brand{font-size:11px;font-weight:700;color:#8060a7}.brand small{font-size:10px;font-weight:400;color:#a18bb7;margin-left:5px}button{border:0;background:#e9dff5;border-radius:7px;color:#826599;width:22px;height:19px;cursor:pointer;padding:0;font-size:17px}.project strong{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}#dot{width:7px;height:7px;border-radius:50%;background:#aaa0b6;flex-shrink:0}#dot.busy{background:#9873d3;box-shadow:0 0 0 3px #9873d320;animation:pulse 1.5s infinite}#quota{font-size:10px;color:#9476b3}p{margin:7px 0 2px;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#detail{height:14px;font-size:10px;color:#92839f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}footer{margin-top:5px;justify-content:space-between}select{border:0;background:transparent;font:10px 'Microsoft YaHei',sans-serif;color:#88749c;width:190px;outline-offset:2px;cursor:pointer}time{font-size:9px;color:#a392b0;white-space:nowrap}@keyframes pulse{50%{opacity:.45}}@media(prefers-reduced-motion:reduce){#dot.busy{animation:none}}
-#card{height:172px}.life{display:flex;align-items:center;gap:10px;margin-top:7px;font-size:11px;color:#9871b5}.life #chat{margin-left:auto;width:auto;padding:0 8px;height:23px;font-size:10px;color:#78549e;border:1px solid #d6c0ee;background:#f9f5ff}.life #chat:hover{background:#ece0fc}.life #chat:disabled{opacity:.5}progress{display:block;width:100%;height:3px;margin-top:5px;border:0;border-radius:4px;overflow:hidden}progress::-webkit-progress-bar{background:#e9e0f1}progress::-webkit-progress-value{background:#c2a0e2}
+:root{font-family:'YouYuan','幼圆','Microsoft YaHei UI','Microsoft YaHei',sans-serif;color:#a66b92;background:transparent;font-synthesis:none}
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{user-select:none;overflow:hidden}
+#card{position:relative;width:100%;height:100%;cursor:grab;touch-action:none}#card:active{cursor:grabbing}
+#thoughtCloud{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#card.mirrored #thoughtCloud,#card.mirrored #cloudSparkles{transform:scaleX(-1)}
+#thoughtText{position:absolute;left:19.643%;right:17.262%;top:22.727%;height:46.97%;display:flex;align-items:center;justify-content:center}
+#card.mirrored #thoughtText{left:17.262%;right:19.643%}
+#operation{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;min-width:0;max-width:100%;margin:0;font-size:11px;font-weight:500;line-height:1.3;text-align:center;letter-spacing:.2px}
+#dot.busy{animation:thinking 1.9s ease-in-out infinite}
+#collapse{position:absolute;right:7.14%;top:18.18%;border:0;border-radius:50%;background:transparent;color:#c894b3;width:16px;height:14px;cursor:pointer;padding:0;font:12px/14px 'YouYuan','幼圆',sans-serif;opacity:0;transition:opacity .12s}
+#card.mirrored #collapse{right:auto;left:7.14%}
+#card:hover #collapse,#collapse:focus-visible{opacity:1}#collapse:hover,#collapse:focus-visible{background:#fae7f2;color:#a66b92;outline:1px solid #edc8df}
+button{touch-action:manipulation}@keyframes thinking{50%{opacity:.35}}
+#card.completed{cursor:pointer}#card.popping{pointer-events:none;cursor:default}
+#card:focus-visible{outline:none}#card:focus-visible #thoughtText{border-radius:9px;outline:1px dotted #d99cbe}
+#pop{position:absolute;right:7.14%;top:18.18%;border:0;border-radius:50%;background:#fff4facc;color:#bf83a6;width:16px;height:14px;cursor:pointer;padding:0;font:12px/14px 'YouYuan','幼圆',sans-serif;opacity:0;transition:opacity .12s}
+#pop[hidden]{display:none}#card:hover #pop,#pop:focus-visible{opacity:1}#pop:hover,#pop:focus-visible{background:#fae0ef;outline:1px solid #edc8df}
+#card.completed #collapse{right:17.86%}#card.mirrored #pop{right:auto;left:7.14%}#card.mirrored.completed #collapse{right:auto;left:17.86%}
+#card.popping #pop{visibility:hidden}
+#card[data-dismissed="true"]{visibility:hidden;pointer-events:none}
+#cloudShards{display:none}.cloudShard{transform-box:view-box;transform-origin:var(--ox) var(--oy)}
+#cloudSparkles{position:absolute;inset:0;pointer-events:none;display:none}
+#cloudSparkles i{position:absolute;font:normal 13px/1 'Segoe UI Symbol','Microsoft YaHei UI',sans-serif;color:#dea5c4;text-shadow:0 1px #fff;opacity:0;left:var(--x);top:var(--y)}
+#cloudSparkles i:nth-child(1){--x:18%;--y:23%;--sx:-5px;--sy:-5px;--sr:-24deg}
+#cloudSparkles i:nth-child(2){--x:34%;--y:8%;--sx:-2px;--sy:-4px;--sr:30deg;font-size:8px}
+#cloudSparkles i:nth-child(3){--x:73%;--y:15%;--sx:6px;--sy:-5px;--sr:25deg}
+#cloudSparkles i:nth-child(4){--x:83%;--y:49%;--sx:5px;--sy:3px;--sr:-20deg;font-size:9px}
+#cloudSparkles i:nth-child(5){--x:26%;--y:66%;--sx:-4px;--sy:5px;--sr:20deg;font-size:9px}
+#cloudSparkles i:nth-child(6){--x:63%;--y:57%;--sx:4px;--sy:5px;--sr:-12deg;font-size:10px}
+#card.popping #cloudArtwork{visibility:hidden}#card.popping #cloudShards,#card.popping #cloudSparkles{display:block}
+#card.popping .cloudShard{animation:cloud-shatter 540ms cubic-bezier(.18,.6,.4,1) both}
+#card.popping #thoughtText{animation:thought-vanish 200ms ease-out both}
+#card.popping #collapse{visibility:hidden}#card.popping #cloudSparkles i{animation:cloud-twinkle 540ms ease-out both}
+#card.reduced-pop #cloudArtwork{visibility:visible}#card.reduced-pop #cloudShards,#card.reduced-pop #cloudSparkles{display:none}
+#card.reduced-pop #thoughtCloud,#card.reduced-pop #thoughtText{animation:thought-vanish 140ms linear both}
+@keyframes cloud-shatter{0%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}20%{opacity:1;transform:translate(calc(var(--dx)*.12),calc(var(--dy)*.12)) rotate(calc(var(--r)*.15)) scale(.98)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.45)}}
+@keyframes cloud-twinkle{0%{opacity:0;transform:scale(.35)}30%{opacity:.95;transform:scale(1.1)}100%{opacity:0;transform:translate(var(--sx),var(--sy)) rotate(var(--sr)) scale(.3)}}
+@keyframes thought-vanish{to{opacity:0}}
+@media(prefers-reduced-motion:reduce){#dot.busy{animation:none}#collapse{transition:none}}

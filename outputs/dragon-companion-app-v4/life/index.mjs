@@ -1,16 +1,21 @@
 /** Local, storage-agnostic companion life state. No I/O, timers, or renderer calls. */
-export const LIFE_VERSION = 1;
+import {normalizeRestBaseline} from '../rest-wakeup.mjs';
+export const LIFE_VERSION = 2;
 export const LIFE_LIMITS = Object.freeze({
   xpPerInteraction: 2, affectionPerInteraction: 1, dailyXp: 30,
   rewardCooldownMs: 10_000, feedbackCooldownMs: 350,
-  gamingDurationMs: 30 * 60_000, sleepDurationMs: 60 * 60_000,
-  maximumModeDurationMs: 4 * 60 * 60_000,
+  maxLevel: 100,
 });
 const MAX_XP = 1_000_000_000;
-const MODES = new Set(['gaming_mode', 'sleep_mode']);
+const MODES = new Set(['sleep_mode']);
 const record = v => v !== null && typeof v === 'object' && !Array.isArray(v);
 const integer = (v, fallback, min, max) => Number.isSafeInteger(v) ? Math.min(max, Math.max(min, v)) : fallback;
 const timestamp = v => Number.isSafeInteger(v) && v >= 0 && v <= 8_640_000_000_000_000 ? v : null;
+export const LEVEL_COSTS = Object.freeze(Array.from({length:99},(_,i)=>i<10?6+i*2:24));
+const LEVEL_STARTS=Object.freeze([0,...LEVEL_COSTS.reduce((all,cost)=>[...all,(all.at(-1)??0)+cost],[])]);
+export function xpForLevel(level){return LEVEL_STARTS[integer(level,1,1,100)-1];}
+export function tierFromLevel(level){const n=typeof level==='number'&&Number.isFinite(level)?Math.max(1,Math.min(100,level)):1;return n<4?'low':n<7?'mid':'high';}
+function legacyAffectionLevel(value){return value<30?1+Math.floor(value/10):value<70?Math.min(6,4+Math.floor((value-30)/14)):Math.min(10,7+Math.floor((value-70)/10));}
 
 function context(options = {}) {
   const now = timestamp(options.now) ?? Date.now();
@@ -32,7 +37,7 @@ function validDay(value) {
 
 export function createLifeState(options = {}) {
   const { now, dayKey } = context(options);
-  return { version: LIFE_VERSION, totalXp: 0, affection: 0,
+  return { version: LIFE_VERSION, totalXp: 0, affection: 0, migrationBonusXp:0,
     daily: { dayKey, xp: 0, interactions: 0 }, lastRewardAt: null,
     lastInteractionAt: null, greetingKeys: [], temporaryMode: null, updatedAt: now };
 }
@@ -40,13 +45,19 @@ export function createLifeState(options = {}) {
 /** Copy/sanitize external data. Advancing days resets the budget; clock rollback does not. */
 export function normalizeLifeState(input, options = {}) {
   const ctx = context(options), fresh = createLifeState({ ...options, now: ctx.now });
-  if (!record(input) || input.version !== LIFE_VERSION) return fresh;
+  if (!record(input) || (input.version !== LIFE_VERSION && input.version !== 1)) return fresh;
   const state = { ...fresh,
     totalXp: integer(input.totalXp, 0, 0, MAX_XP),
     affection: integer(input.affection, 0, 0, 100),
+    migrationBonusXp:input.version===LIFE_VERSION?integer(input.migrationBonusXp,0,0,MAX_XP):0,
     lastRewardAt: timestamp(input.lastRewardAt), lastInteractionAt: timestamp(input.lastInteractionAt),
     updatedAt: timestamp(input.updatedAt) ?? ctx.now,
   };
+  if(input.version===1){
+    const oldLevel=Math.max(Math.floor(Math.sqrt(state.totalXp/100))+1,integer(input.level,1,1,100));
+    const preservedLevel=Math.min(100,Math.max(oldLevel,legacyAffectionLevel(state.affection)));
+    state.migrationBonusXp=Math.max(0,xpForLevel(preservedLevel)-state.totalXp);
+  }
   if (record(input.daily) && validDay(input.daily.dayKey) && input.daily.dayKey >= ctx.dayKey) {
     state.daily = { dayKey: input.daily.dayKey,
       xp: integer(input.daily.xp, 0, 0, LIFE_LIMITS.dailyXp),
@@ -55,20 +66,23 @@ export function normalizeLifeState(input, options = {}) {
   state.greetingKeys = Array.isArray(input.greetingKeys) ? [...new Set(input.greetingKeys.filter(k =>
     typeof k === 'string' && /^\d{4}-\d{2}-\d{2}\/(morning|noon|evening)$/.test(k) && validDay(k.slice(0, 10))))].slice(-12) : [];
   const m = input.temporaryMode;
-  if (record(m) && MODES.has(m.kind) && timestamp(m.startedAt) !== null && timestamp(m.expiresAt) !== null
-      && m.startedAt <= ctx.now && m.expiresAt > ctx.now && m.expiresAt > m.startedAt
-      && m.expiresAt - m.startedAt <= LIFE_LIMITS.maximumModeDurationMs) {
-    state.temporaryMode = { kind: m.kind, startedAt: m.startedAt, expiresAt: m.expiresAt };
+  if (record(m) && MODES.has(m.kind) && timestamp(m.startedAt) !== null && m.startedAt <= ctx.now
+      && (input.version===LIFE_VERSION || (timestamp(m.expiresAt)!==null&&m.expiresAt>ctx.now&&m.expiresAt>m.startedAt))) {
+    // A still-active legacy sleep becomes indefinite; expired legacy sleep stays awake.
+    state.temporaryMode = { kind: 'sleep_mode', startedAt: m.startedAt,restBaseline:normalizeRestBaseline(m.restBaseline) };
   }
   return state;
 }
 
 export function getProgression(input, options = {}) {
-  const xp = normalizeLifeState(input, options).totalXp;
-  const level = Math.floor(Math.sqrt(xp / 100)) + 1;
-  const levelStartXp = 100 * (level - 1) ** 2, nextLevelXp = 100 * level ** 2;
-  return { level, totalXp: xp, levelStartXp, nextLevelXp, xpToNextLevel: nextLevelXp - xp,
-    progress: (xp - levelStartXp) / (nextLevelXp - levelStartXp) };
+  const state=normalizeLifeState(input,options),xp=state.totalXp+state.migrationBonusXp;
+  let level=1;while(level<100&&xp>=LEVEL_STARTS[level])level++;
+  const isMax=level===100,levelStartXp=LEVEL_STARTS[level-1],levelXpCost=isMax?0:LEVEL_COSTS[level-1];
+  const levelXp=isMax?0:xp-levelStartXp,progress=isMax?1:levelXp/levelXpCost;
+  return {level,affectionLevel:level,tier:tierFromLevel(level),maxLevel:100,isMax,
+    totalXp:state.totalXp,progressionXp:xp,migrationBonusXp:state.migrationBonusXp,
+    levelStartXp,nextLevelXp:isMax?null:LEVEL_STARTS[level],xpToNextLevel:isMax?0:levelXpCost-levelXp,
+    levelXp,levelXpCost,progress,reactionLevel:isMax?100:level+progress};
 }
 
 export function getEffectiveMode(input, options = {}) {
@@ -98,10 +112,12 @@ export function applyInteraction(input, action = 'click', options = {}) {
     result.feedback = 'sleepy_reaction'; result.reason = 'sleeping'; return { state, result };
   }
   result.feedback = 'petting_reaction';
+  if(getProgression(state,{...options,now}).isMax){result.reason='max_level';return {state,result};}
   if (state.lastRewardAt !== null && now - state.lastRewardAt < LIFE_LIMITS.rewardCooldownMs) {
     result.reason = 'reward_cooldown'; return { state, result };
   }
-  const xp = Math.min(LIFE_LIMITS.xpPerInteraction, LIFE_LIMITS.dailyXp - state.daily.xp, MAX_XP - state.totalXp);
+  const xp = Math.min(LIFE_LIMITS.xpPerInteraction, LIFE_LIMITS.dailyXp - state.daily.xp, MAX_XP - state.totalXp,
+    xpForLevel(100)-state.totalXp-state.migrationBonusXp);
   if (xp <= 0) { result.reason = 'daily_cap'; return { state, result }; }
   result.xpGained = xp;
   result.affectionGained = Math.min(LIFE_LIMITS.affectionPerInteraction, 100 - state.affection);
@@ -128,16 +144,12 @@ export function claimGreeting(input, options = {}) {
   return { state, result: { kind: 'greeting', greeting, reason: null } };
 }
 
-/** null explicitly leaves a temporary mode. Expired modes normalize to null. */
+/** Sleep persists until explicitly cleared; durationMs is intentionally ignored. */
 export function setTemporaryMode(input, mode, options = {}) {
   const { now } = context(options), state = normalizeLifeState(input, { ...options, now });
   if (mode !== null && !MODES.has(mode)) return { state, result: { kind: 'mode', accepted: false, reason: 'invalid_mode', mode: getEffectiveMode(state, { ...options, now }), expiresAt: state.temporaryMode?.expiresAt ?? null } };
   if (mode === null) state.temporaryMode = null;
-  else {
-    const fallback = mode === 'gaming_mode' ? LIFE_LIMITS.gamingDurationMs : LIFE_LIMITS.sleepDurationMs;
-    const durationMs = integer(options.durationMs, fallback, 1_000, LIFE_LIMITS.maximumModeDurationMs);
-    state.temporaryMode = { kind: mode, startedAt: now, expiresAt: now + durationMs };
-  }
+  else state.temporaryMode = { kind: 'sleep_mode', startedAt: now,restBaseline:normalizeRestBaseline(options.restBaseline) };
   state.updatedAt = now;
   return { state, result: { kind: 'mode', accepted: true, reason: null, mode, expiresAt: state.temporaryMode?.expiresAt ?? null } };
 }

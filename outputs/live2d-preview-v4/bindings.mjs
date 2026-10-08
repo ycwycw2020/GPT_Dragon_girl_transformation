@@ -19,8 +19,8 @@ export const BINDINGS = Object.freeze([
 ]);
 
 export function applyPresentationPolicy(values,modelId,frame={}) {
-  // Left-eye repair is deferred; hold both eyes open during automatic playback
-  // rather than making the character wink continuously. Manual QA can override.
+  // Rest defaults. The app applies a shared blink clock: the right eye uses its
+  // existing Core rig; the left uses the aligned independent eyelid renderer.
   if(modelId!=='working_thinking')return values;
   const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
   const calibrated={...values,ParamEyeLOpen:1,ParamEyeROpen:1};

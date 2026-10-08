@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "runtime": "weighted-art-runtime-v050",
+  "state": "idle_low_energy",
+  "canvas": [
+    2426,
+    2592
+  ],
+  "modelFormat": "programmatic-layer-rig; not a Cubism moc3 export",
+  "source": {
+    "file": "original.png",
+    "sha256": "4b06f3e8568414e42cfac2d1f31588562131bf260b3bdbe2dedb25b127ea343e",
+    "unchanged": true
+  },
+  "weights": {
+    "file": "weights.png",
+    "channels": {
+      "r": "head",
+      "g": "tail"
+    },
+    "derivedFrom": "original semantic layer masks and approved joint-pinned binding weights"
+  },
+  "tailHit": {
+    "file": "tail-hit.png",
+    "bounds": [
+      34,
+      1100,
+      428,
+      1568
+    ]
+  },
+  "sourceMotionRecipe": {
+    "coordinate_space": "HD pixels, origin top left; binding weight PNG is 16-bit gray 0..65535; use shared sampled vertex weights",
+    "head": {
+      "layers": [
+        "03_head_join_buffer",
+        "04_head_hair_face",
+        "05_eye_R_original",
+        "06_eye_L_original"
+      ],
+      "weight_file": "binding-weights/head.png",
+      "x_amplitude_px": 1.2,
+      "y_amplitude_px": 0.4,
+      "suggested_period_seconds": 8.0,
+      "constraint": "Semantic joins, cheek-palm contact and long hair ends are pinned. All listed pieces must share the identical field."
+    },
+    "tail": {
+      "layers": [
+        "01_tail_root_buffer",
+        "02_tail"
+      ],
+      "weight_file": "binding-weights/tail.png",
+      "x_amplitude_px": 1.8,
+      "y_amplitude_px": 0.5,
+      "suggested_period_seconds": 7.0,
+      "constraint": "Root and semantic joins are weight 0. Preserve current state-specific tail silhouette. Never translate the entire tail."
+    },
+    "static": [
+      "00_static_scene",
+      "07_supporting_arm_hand"
+    ],
+    "fx": {
+      "layer": "08_state_fx",
+      "action": "optional opacity pulse; keep position fixed"
+    },
+    "blink": {
+      "implemented": false,
+      "reason": "Requires dedicated high-quality eyelid/iris/eyelash art refinement. No skin-fade surrogate delivered."
+    },
+    "status": "binding recipe only; no Cubism cmo3/moc3 is claimed"
+  },
+  "runtimeMotion": {
+    "headX": 1.2,
+    "headY": 1.8,
+    "headPeriod": 8,
+    "tailX": 3.5,
+    "tailY": 0.6,
+    "tailPeriod": 7
+  },
+  "blink": {
+    "ready": false,
+    "reason": "Dedicated state-specific eyelid art pending; keep approved original expression"
+  },
+  "files": [
+    "original.png",
+    "weights.png",
+    "tail-hit.png"
+  ]
+}

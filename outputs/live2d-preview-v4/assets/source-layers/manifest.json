@@ -1,0 +1,715 @@
+{
+  "version": 1,
+  "canvas": [
+    2426,
+    2592
+  ],
+  "unchangedSourcePixels": true,
+  "layers": [
+    {
+      "mesh": "ArtMesh",
+      "file": "35_status_icon.png",
+      "bounds": [
+        1750,
+        528,
+        1880,
+        683
+      ],
+      "size": [
+        130,
+        155
+      ],
+      "sha256": "800e34f593976ffaad388e2f6f2f0f7afd3ff94ebc9a8cf6df7a10848a0a2328"
+    },
+    {
+      "mesh": "ArtMesh0",
+      "file": "34_plant.png",
+      "bounds": [
+        1876,
+        1114,
+        2426,
+        1667
+      ],
+      "size": [
+        550,
+        553
+      ],
+      "sha256": "6090ba3b419fcac55cdf72d660e630e056d2fb57a945366a1963d3e0a42c0ed5"
+    },
+    {
+      "mesh": "ArtMesh1",
+      "file": "33_small_figurine.png",
+      "bounds": [
+        1622,
+        1418,
+        2025,
+        1641
+      ],
+      "size": [
+        403,
+        223
+      ],
+      "sha256": "e7bbb8eac1efafc97e1c3b56e12daf006c5ef89fdd164d50e2eb452224329356"
+    },
+    {
+      "mesh": "ArtMesh2",
+      "file": "32_cup.png",
+      "bounds": [
+        702,
+        1350,
+        939,
+        1705
+      ],
+      "size": [
+        237,
+        355
+      ],
+      "sha256": "a3d742f71b181d00e615ff9961b3d8832301054bbf1e5b0b526eccf337339f9e"
+    },
+    {
+      "mesh": "ArtMesh3",
+      "file": "31_notebook.png",
+      "bounds": [
+        944,
+        1516,
+        1673,
+        1731
+      ],
+      "size": [
+        729,
+        215
+      ],
+      "sha256": "518554d9277b2b0ff9747f3237deb13a5cee79701e74c8bf1c1334db5ce33e23"
+    },
+    {
+      "mesh": "ArtMesh4",
+      "file": "30_books.png",
+      "bounds": [
+        224,
+        1354,
+        716,
+        1633
+      ],
+      "size": [
+        492,
+        279
+      ],
+      "sha256": "07606f0d7dc1290f147f85d488fa99745670d469fe1d826ee67b93dea3bf4a93"
+    },
+    {
+      "mesh": "ArtMesh5",
+      "file": "29_monitor.png",
+      "bounds": [
+        1810,
+        668,
+        2426,
+        1595
+      ],
+      "size": [
+        616,
+        927
+      ],
+      "sha256": "b6a93f2c3df7b8d5536c6786d1d145eeebfae61b169a388986c39d0fb8185316"
+    },
+    {
+      "mesh": "ArtMesh6",
+      "file": "37_finger_L_middle.png",
+      "bounds": [
+        1684,
+        1300,
+        1745,
+        1384
+      ],
+      "size": [
+        61,
+        84
+      ],
+      "sha256": "b96c606fa17d1313b2777886ad9ac968d0c47a4debd440719228f371ee44535a"
+    },
+    {
+      "mesh": "ArtMesh7",
+      "file": "36_finger_L_index.png",
+      "bounds": [
+        1650,
+        1306,
+        1701,
+        1386
+      ],
+      "size": [
+        51,
+        80
+      ],
+      "sha256": "3b153d272fab4d656e3fd87dd03fcb6eca48deafd69609bf5598fc10f3b55a09"
+    },
+    {
+      "mesh": "ArtMesh8",
+      "file": "39_keyboard_hand_underpaint.png",
+      "bounds": [
+        1584,
+        1282,
+        1772,
+        1386
+      ],
+      "size": [
+        188,
+        104
+      ],
+      "sha256": "d70412ccb1ab128c704fdc0a130acaf9c98f6f88d25c1548c762e44e644432cf"
+    },
+    {
+      "mesh": "ArtMesh9",
+      "file": "27_hand_R_mouse_side.png",
+      "bounds": [
+        966,
+        1336,
+        1191,
+        1455
+      ],
+      "size": [
+        225,
+        119
+      ],
+      "sha256": "0a40d85c1273939c451420327a731ca0c7ef8dd468a2bb5732df18922d325b69"
+    },
+    {
+      "mesh": "ArtMesh10",
+      "file": "25_mouse.png",
+      "bounds": [
+        975,
+        1334,
+        1209,
+        1525
+      ],
+      "size": [
+        234,
+        191
+      ],
+      "sha256": "ea4a8c514a7c0db5a8afdf79ff62e4f3653a2ed409f242a21c4861530989de1c"
+    },
+    {
+      "mesh": "ArtMesh11",
+      "file": "26_keyboard.png",
+      "bounds": [
+        1238,
+        1280,
+        1828,
+        1509
+      ],
+      "size": [
+        590,
+        229
+      ],
+      "sha256": "fb1da561dae036609509bc53fb9cfe337abd5bccdf93f1449c52f893fb2be100"
+    },
+    {
+      "mesh": "ArtMesh12",
+      "file": "28_hand_L_keyboard_side.png",
+      "bounds": [
+        1584,
+        1282,
+        1772,
+        1385
+      ],
+      "size": [
+        188,
+        103
+      ],
+      "sha256": "9d3e2386a18cc5b97a7da2186aa92c45004896c5f5e3e80e8a4d6e69656471ef"
+    },
+    {
+      "mesh": "ArtMesh13",
+      "file": "24_mouse_pad.png",
+      "bounds": [
+        913,
+        1436,
+        1323,
+        1575
+      ],
+      "size": [
+        410,
+        139
+      ],
+      "sha256": "c72fc2ee91f831d604fdb923b16a9131e28648788ff6376073e0ff03f76c812e"
+    },
+    {
+      "mesh": "ArtMesh14",
+      "file": "38_mouse_motion_underpaint.png",
+      "bounds": [
+        966,
+        1334,
+        1209,
+        1525
+      ],
+      "size": [
+        243,
+        191
+      ],
+      "sha256": "2c87ae9f726b4d0df1e19edc13fd833768ef0805c1fffb9c737845cd744f4cf2"
+    },
+    {
+      "mesh": "ArtMesh15",
+      "file": "23_arm_L_keyboard_side.png",
+      "bounds": [
+        1436,
+        1066,
+        1711,
+        1381
+      ],
+      "size": [
+        275,
+        315
+      ],
+      "sha256": "2b6b1a1f547aae1705fd60cb30c548736ce240b2b595b872b20f4702de9da61a"
+    },
+    {
+      "mesh": "ArtMesh16",
+      "file": "22_arm_R_mouse_side.png",
+      "bounds": [
+        736,
+        1040,
+        1167,
+        1437
+      ],
+      "size": [
+        431,
+        397
+      ],
+      "sha256": "14c549dafacb6131c6c501827aef3a25e084979a3b3484be49055ab3d1c2ca0e"
+    },
+    {
+      "mesh": "ArtMesh17",
+      "file": "21_desk_foreground.png",
+      "bounds": [
+        131,
+        1362,
+        2426,
+        1837
+      ],
+      "size": [
+        2295,
+        475
+      ],
+      "sha256": "9284fb67c466d6603d2f48f2c814e1f255975a4530d864a32d6135d11bc06746"
+    },
+    {
+      "mesh": "ArtMesh18",
+      "file": "20_desk_body.png",
+      "bounds": [
+        130,
+        1365,
+        2426,
+        2585
+      ],
+      "size": [
+        2296,
+        1220
+      ],
+      "sha256": "5ccf902d4c58c619777352b56fd309d04a44e1f13039080226980529e55de8c7"
+    },
+    {
+      "mesh": "ArtMesh20",
+      "file": "42_eye_R_closed.png",
+      "bounds": [
+        1066,
+        750,
+        1299,
+        932
+      ],
+      "size": [
+        233,
+        182
+      ],
+      "sha256": "58298c0b98bd103ffa7dc76fbb3d7dbbc782d6443bf71d92169ac1c9842ebbb9"
+    },
+    {
+      "mesh": "ArtMesh21",
+      "file": "19_mouth.png",
+      "bounds": [
+        1372,
+        908,
+        1403,
+        937
+      ],
+      "size": [
+        31,
+        29
+      ],
+      "sha256": "fcc37b863754f401fbda351d42e379e2b9fe4cba151bf367052a0f06ef71a04b"
+    },
+    {
+      "mesh": "ArtMesh22",
+      "file": "18_brow_L.png",
+      "bounds": [
+        1396,
+        606,
+        1471,
+        633
+      ],
+      "size": [
+        75,
+        27
+      ],
+      "sha256": "121fd23d6b90a203546cbbeceb5cd84f4367501c7e8f8440ee5dd97bd717b2cb"
+    },
+    {
+      "mesh": "ArtMesh23",
+      "file": "17_brow_R.png",
+      "bounds": [
+        1154,
+        708,
+        1257,
+        757
+      ],
+      "size": [
+        103,
+        49
+      ],
+      "sha256": "2f41257e1d5ec54d98993ab0e93a603c1821d8775354e0a6199e191b8abdd43e"
+    },
+    {
+      "mesh": "ArtMesh24",
+      "file": "16_eye_L.png",
+      "bounds": [
+        1410,
+        662,
+        1561,
+        831
+      ],
+      "size": [
+        151,
+        169
+      ],
+      "sha256": "f63665c8cf9a8c6ced95124562a4abd8415c05bf21dc8ea34c9db6e30d657103"
+    },
+    {
+      "mesh": "ArtMesh25",
+      "file": "15_eye_R.png",
+      "bounds": [
+        1076,
+        778,
+        1281,
+        911
+      ],
+      "size": [
+        205,
+        133
+      ],
+      "sha256": "4618e22fd890ef7cccaa423392c61a6fc4d23ef416f13ebede82971eaea8662c"
+    },
+    {
+      "mesh": "ArtMesh26",
+      "file": "14_ear_L.png",
+      "bounds": [
+        1616,
+        726,
+        1701,
+        801
+      ],
+      "size": [
+        85,
+        75
+      ],
+      "sha256": "e3b8258f775152fdc3b48d8b36889340793a72a0a3371d02f56fa400f4c5dfa5"
+    },
+    {
+      "mesh": "ArtMesh27",
+      "file": "13_ear_R.png",
+      "bounds": [
+        900,
+        894,
+        1041,
+        1001
+      ],
+      "size": [
+        141,
+        107
+      ],
+      "sha256": "65af8f35e20796ce72ea8727a57a58abc1e4caf1b6e86307aa843e46d63f833e"
+    },
+    {
+      "mesh": "ArtMesh28",
+      "file": "12_face.png",
+      "bounds": [
+        1078,
+        577,
+        1547,
+        1011
+      ],
+      "size": [
+        469,
+        434
+      ],
+      "sha256": "2a77a173c60781f997cccada352cd466994c04d55ea3985711dd77da6aa9b074"
+    },
+    {
+      "mesh": "ArtMesh29",
+      "file": "11_hair_tassels.png",
+      "bounds": [
+        790,
+        700,
+        955,
+        1273
+      ],
+      "size": [
+        165,
+        573
+      ],
+      "sha256": "25f12b59847a2783e57153eb09b7fc0058e59b159ce116c063dcae5bec9bd9dd"
+    },
+    {
+      "mesh": "ArtMesh30",
+      "file": "10_head_accessory.png",
+      "bounds": [
+        732,
+        466,
+        1101,
+        803
+      ],
+      "size": [
+        369,
+        337
+      ],
+      "sha256": "c868ebaef20c0c8a06ee251a1ad6d172348198bc5ef5eb86336d457c9cfcb6be"
+    },
+    {
+      "mesh": "ArtMesh31",
+      "file": "09_horn_L.png",
+      "bounds": [
+        1292,
+        112,
+        1619,
+        497
+      ],
+      "size": [
+        327,
+        385
+      ],
+      "sha256": "4e16e310e02798448461956bbd51fe404a1e2cf6c0d0426dd98be8a0fabe43d6"
+    },
+    {
+      "mesh": "ArtMesh32",
+      "file": "08_horn_R.png",
+      "bounds": [
+        687,
+        46,
+        1001,
+        610
+      ],
+      "size": [
+        314,
+        564
+      ],
+      "sha256": "eef6185883c1cad66012a335aaae998e2da81701b55414bdbbaae7a5e94fc792"
+    },
+    {
+      "mesh": "ArtMesh33",
+      "file": "07_ahoge.png",
+      "bounds": [
+        1018,
+        0,
+        1322,
+        345
+      ],
+      "size": [
+        304,
+        345
+      ],
+      "sha256": "7665e50fd7ed50b7397b9e91418d4ef9fbfe7786e802844ce15dcb48f8413ad7"
+    },
+    {
+      "mesh": "ArtMesh34",
+      "file": "06_bangs.png",
+      "bounds": [
+        972,
+        236,
+        1637,
+        822
+      ],
+      "size": [
+        665,
+        586
+      ],
+      "sha256": "62d71e723b877745574c1937a2815dc9515e2eb38f0e9cda6371d855ff138b51"
+    },
+    {
+      "mesh": "ArtMesh35",
+      "file": "05_hair_front.png",
+      "bounds": [
+        468,
+        216,
+        1756,
+        1402
+      ],
+      "size": [
+        1288,
+        1186
+      ],
+      "sha256": "4cf5a527a3df7dfb27e821a367d1036c687d952d09da27de76e926693bb78d68"
+    },
+    {
+      "mesh": "ArtMesh36",
+      "file": "04_hair_back.png",
+      "bounds": [
+        279,
+        632,
+        1834,
+        1403
+      ],
+      "size": [
+        1555,
+        771
+      ],
+      "sha256": "2f80f2a06822b4d66ff25aa7c4502df4dd97a26b09e9420a40801ac184d2ce40"
+    },
+    {
+      "mesh": "ArtMesh37",
+      "file": "03_body.png",
+      "bounds": [
+        644,
+        1147,
+        1752,
+        2516
+      ],
+      "size": [
+        1108,
+        1369
+      ],
+      "sha256": "01ab3418f994865f27c74a111a707d9734a096cb925e28400958dd4f8cde2512"
+    },
+    {
+      "mesh": "ArtMesh38",
+      "file": "02_tail.png",
+      "bounds": [
+        0,
+        798,
+        411,
+        1458
+      ],
+      "size": [
+        411,
+        660
+      ],
+      "sha256": "e9ef7a6810d8742b453d58199d28855a481db828fe21099a0da391f7102aaa94"
+    },
+    {
+      "mesh": "ArtMesh39",
+      "file": "01_chair.png",
+      "bounds": [
+        347,
+        492,
+        1800,
+        2401
+      ],
+      "size": [
+        1453,
+        1909
+      ],
+      "sha256": "aa62694968e03841422f16fbbbcf14a840d3c04cd5e804461b930dd600558d48"
+    },
+    {
+      "mesh": "ArtMesh40",
+      "file": "00_remaining_visible_pixels.png",
+      "bounds": [
+        0,
+        41,
+        2426,
+        2592
+      ],
+      "size": [
+        2426,
+        2551
+      ],
+      "sha256": "2902c6c7ab8240a6283a77749c0c3846ed212b21306845fc449140434b827a81"
+    },
+    {
+      "mesh": "ArtMesh41",
+      "file": "41_hair_join_buffer.png",
+      "bounds": [
+        1782,
+        1094,
+        1829,
+        1188
+      ],
+      "size": [
+        47,
+        94
+      ],
+      "sha256": "6216ffc5596d3bc3ee8d0395f35735c3202c623f949b9d13ace0288a367e0d16"
+    },
+    {
+      "mesh": "ArtMesh42",
+      "file": "40_tail_root_buffer.png",
+      "bounds": [
+        348,
+        1213,
+        355,
+        1222
+      ],
+      "size": [
+        7,
+        9
+      ],
+      "sha256": "f539bf9f857ad69406f501d8677781dd45ccfe93aa15e9f8a96e703a19047106"
+    },
+    {
+      "mesh": "ArtMesh46",
+      "file": "50_eye_R_aperture_mask.png",
+      "bounds": [
+        1105,
+        792,
+        1298,
+        914
+      ],
+      "size": [
+        193,
+        122
+      ],
+      "sha256": "c47fedf586e7e97a0cda169a12010bb743ae56b5a2cb0cb33f4184d1634ec487"
+    },
+    {
+      "mesh": "ArtMesh48",
+      "file": "48_eye_R_stationary_eye.png",
+      "bounds": [
+        1066,
+        750,
+        1299,
+        932
+      ],
+      "size": [
+        233,
+        182
+      ],
+      "sha256": "6fb2988581452dad59d7738e91263f4904c4180ac5cadcd0692a1b3ff4a93e81"
+    },
+    {
+      "mesh": "ArtMesh50",
+      "file": "46_eye_R_skin_base.png",
+      "bounds": [
+        1066,
+        750,
+        1299,
+        932
+      ],
+      "size": [
+        233,
+        182
+      ],
+      "sha256": "ba27521dd302f2a64cf51089f17e24221bdd303eff4d762487cd83a05d378160"
+    },
+    {
+      "mesh": "ArtMesh52",
+      "file": "44_eye_R_upperlash.png",
+      "bounds": [
+        1077,
+        773,
+        1279,
+        891
+      ],
+      "size": [
+        202,
+        118
+      ],
+      "sha256": "f95a2183586cede6fd12083bc1e639d8bdd5a44ea60aa4b34dfb6d775e03014f"
+    }
+  ]
+}

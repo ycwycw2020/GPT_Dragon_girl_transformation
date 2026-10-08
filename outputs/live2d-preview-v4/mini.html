@@ -1,8 +1,22 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GPT娘 · 当前任务</title><link rel="stylesheet" href="mini.css"></head>
-<body><section id="card" aria-label="Codex 当前任务"><header><span class="brand">✦ GPT娘 <small>陪你工作</small></span><button id="collapse" aria-label="收起任务卡片" title="收起（右键菜单可恢复）">−</button></header>
-<div class="project"><span id="dot"></span><strong id="folder">等待 Codex 任务</strong><span id="quota">—</span></div>
-<p id="operation" aria-live="polite">正在连接…</p><div id="detail"></div>
-<footer><select id="sessions" aria-label="跟随的 Codex 会话"><option value="">自动跟随活跃目录</option></select><time id="age">—</time></footer>
-<div class="life"><span id="affection">♡ 好感 —</span><span id="level">Lv.1</span><button id="chat" title="在当前目录打开 Codex 新聊天">＋ 新建聊天</button></div>
-<progress id="experience" max="1" value="0" aria-label="等级经验"></progress></section><script type="module" src="mini.mjs"></script></body></html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GPT_Dragon_girl_transformation · 正在做什么</title><link rel="stylesheet" href="mini.css"></head>
+<body><section id="card" role="link" tabindex="0" aria-label="Codex 正在做什么，点击回到对话"><svg id="thoughtCloud" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="168" height="66" viewBox="0 0 168 66">
+  <defs>
+    <linearGradient id="cream" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#fffefe"/><stop offset="1" stop-color="#fff0f8"/></linearGradient>
+    <filter id="soft" x="-15%" y="-20%" width="130%" height="145%"><feDropShadow dx="0" dy="1" stdDeviation="1.3" flood-color="#cd9bbc" flood-opacity=".20"/></filter>
+  </defs>
+  <g id="cloudArtwork"><g fill="url(#cream)" stroke="#eac3d9" stroke-width="1" filter="url(#soft)">
+    <path d="M25 13C28 5 41 3 50 8C57 1 72 1 79 8C91 2 107 4 113 11C124 7 138 10 141 19C153 17 163 25 160 34C165 44 154 51 143 49C134 55 119 53 112 49C100 55 88 53 82 50C70 55 56 53 51 49C38 54 24 49 23 43C11 44 4 36 9 27C7 19 15 12 25 13Z"/>
+    <ellipse cx="59" cy="55.7" rx="3.7" ry="3.1"/>
+    <ellipse cx="48" cy="60.2" rx="2.5" ry="2.1"/>
+    <circle cx="39.5" cy="63" r="1.35"/>
+  </g>
+  <path d="M26 21l1.5 3.3 3.4 1.3-3.4 1.4-1.5 3.4-1.4-3.4-3.3-1.4 3.3-1.3z" fill="#f1cee1"/>
+  <circle id="dot" cx="145" cy="35.5" r="1.35" fill="#ecc2d9"/></g>
+  <g id="cloudShards" aria-hidden="true"></g>
+</svg>
+<div id="thoughtText"><p id="operation" aria-live="polite">正在连接 Codex…</p></div>
+<div id="cloudSparkles" aria-hidden="true"><i>✧</i><i>✦</i><i>✧</i><i>✦</i><i>✧</i><i>♡</i></div>
+<button id="collapse" aria-label="收起任务气泡" title="收起（右键菜单可恢复）">−</button>
+<button id="pop" aria-label="点碎已完成任务的云朵" title="已完成 · 点碎云朵" hidden>×</button>
+</section><script type="module" src="mini.mjs"></script></body></html>

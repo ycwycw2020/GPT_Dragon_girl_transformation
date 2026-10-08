@@ -1,8 +1,8 @@
-GPT娘 · 随 Codex 启动
+GPT_Dragon_girl_transformation · 随 Codex 启动
 
-本机安装方式：当前用户“启动”文件夹中的“GPT娘 - 跟随 Codex.lnk”。
+本机安装方式：当前用户“启动”文件夹中的“GPT_Dragon_girl_transformation - 跟随 Codex.lnk”。
 Windows 登录后启动轻量后台观察器（wscript.exe），每3秒读取一次进程名称、路径和父进程。
-当检测到 Windows 商店版 OpenAI.Codex 桌面主进程启动时，启动本项目的 GPT娘。
+当检测到 Windows 商店版 OpenAI.Codex 桌面主进程启动时，启动本项目的 GPT_Dragon_girl_transformation。
 不会修改 Codex 程序、Hooks 或信任记录，不会读取聊天内容。
 已运行的桌宠不会重复打开；手动退出桌宠后，该次 Codex 运行期间不会立即重启桌宠。
 仅关闭 Codex 窗口而保留后台主进程，不等于重新启动 Codex。
